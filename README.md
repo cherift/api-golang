@@ -36,7 +36,7 @@ No authorization needed. All the datas are saved locally.
 
 ### - Remove a document
 
-`POST /remove/{id}`
+`DELETE /remove/{id}`
 
 |Paraemter | type | Description|
 |----------|------|------------|
@@ -50,7 +50,7 @@ No authorization needed. All the datas are saved locally.
 
 ### - Get a document information
 
-`POST /document/{id}`
+`GET /document/{id}`
 
 |Paraemter | type | Description|
 |----------|------|------------|
