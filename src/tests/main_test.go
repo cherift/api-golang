@@ -3,6 +3,7 @@ package tests
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
+	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	model "models"
@@ -39,10 +40,32 @@ func TestRemoveDocument(t *testing.T) {
 
 	assert.Equal(t, size, len(model.Documents), "size of the list of documents not changed yet")
 
-	req, _ := http.NewRequest("DELETE", "localhost:8080/remove", nil)
-	rec := httptest.NewRecorder()
+	router := mux.NewRouter()
+	router.HandleFunc("/remove/{id}", control.RemoveDocument).Methods("DELETE")
 	
-	control.RemoveDocument(rec, req)
+	req, _ := http.NewRequest("DELETE", "/remove/12", nil)
+	rec := httptest.NewRecorder()
 
-	assert.Equal(t, 0, len(model.Documents), "The only one object has been removed")
+	router.ServeHTTP(rec, req)
+
+	// size has been decreased
+	assert.Equal(t, size-1, len(model.Documents), "The only one object has been removed")
+}
+
+// Tests removig non existing projet
+func TestRemoveNotExistingDocument(t *testing.T) {
+	size := len(model.Documents)
+
+	assert.Equal(t, size, len(model.Documents), "size of the list of documents not changed yet")
+
+	router := mux.NewRouter()
+	router.HandleFunc("/remove/{id}", control.RemoveDocument).Methods("DELETE")
+	
+	req, _ := http.NewRequest("DELETE", "/remove/500000", nil)
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	// size has is the same
+	assert.Equal(t, size, len(model.Documents), "The only one object has been removed")
 }
