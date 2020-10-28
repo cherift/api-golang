@@ -43,3 +43,17 @@ func RemoveDocument(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "No existing document corresponding to the ID %d \n", id)
 }
+
+// Gets a document
+func GetDocument(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+	
+	if document, isPresent := model.Documents[id]; isPresent {
+		fmt.Fprintf(w, "Document Founded !\nID : %d \nName : %s \nDescription : %s \n", 
+			document.ID, document.Name, document.Description)
+		return
+	}
+
+	fmt.Fprintf(w, "No existing document corresponding to the ID %d \n", id)
+}
