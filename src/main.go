@@ -12,6 +12,7 @@ func main() {
 
 	router.HandleFunc("/", control.HomePage).Methods("GET")
 	router.HandleFunc("/create", control.CreateDocument).Methods("POST")
+	router.HandleFunc("/remove/{id}", control.RemoveDocument).Methods("DELETE")
 	
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
