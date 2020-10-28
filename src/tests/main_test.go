@@ -20,6 +20,19 @@ func TestCreateDocument(t *testing.T) {
 }
 
 
+// Tests the creating of existing document document 
+func TestCreateExistingDocument(t *testing.T) {
+	req, _ := http.NewRequest("POST", "localhost:8080/create?id=12&name=name1&desc=description1", nil)
+	rec := httptest.NewRecorder()
+	
+	size := len(model.Documents)
+	assert.Equal(t, size, len(model.Documents), "No document has been added yet")
+	control.CreateDocument(rec, req)
+	// The size is always the same
+	assert.NotEqual(t, size-1, len(model.Documents), "document has been added")
+	assert.Equal(t, size, len(model.Documents), "document has been added")	
+}
+
 // Tests removig document funciton
 func TestRemoveDocument(t *testing.T) {
 	size := len(model.Documents)
