@@ -4,11 +4,14 @@ import(
 	"fmt"
 	"net/http"
 	"strconv"
+	"encoding/json"
 	model "models"
 )
 
+// Gets list of documents
 func HomePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Vade Secure Test")
+	fmt.Fprint(w, "Vade Secure Test\n\n")
+	json.NewEncoder(w).Encode(model.Documents)
 }
 
 // Creates a new document
