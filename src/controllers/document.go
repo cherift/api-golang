@@ -36,6 +36,7 @@ func RemoveDocument(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	
 	if document, isPresent := model.Documents[id]; isPresent {
+		delete(model.Documents, document.ID)
 		fmt.Fprintf(w, "The document %d has been deleted \n", document.ID)
 		return
 	}
