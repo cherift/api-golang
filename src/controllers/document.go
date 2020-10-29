@@ -1,7 +1,6 @@
 package controllers
 
 import(
-	"fmt"
 	"net/http"
 	"strconv"
 	"encoding/json"
@@ -9,14 +8,33 @@ import(
 	model "models"
 )
 
+type Result struct {
+	Message string
+	Code	int
+	Result 	[]model.Document
+}  
+
 // Gets list of documents
 func HomePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Vade Secure Test\n\n")
-	json.NewEncoder(w).Encode(model.Documents)
+	result := Result{
+		Message :"Vade Secure Test",
+		Code    : 200, 
+		Result  : func (datas map[int]model.Document) []model.Document {
+			list := []model.Document{}
+			for _, value := range datas {
+				list = append(list, value)
+			}
+			return list
+		}(model.Documents),
+	}
+
+	json.NewEncoder(w).Encode(result)
 }
 
 // Creates a new document
 func CreateDocument(w http.ResponseWriter, r *http.Request) {
+	var result Result
+
 	params := r.URL.Query()
 
 	id, _ := strconv.Atoi(params.Get("id"))
@@ -27,41 +45,54 @@ func CreateDocument(w http.ResponseWriter, r *http.Request) {
 	if _, isPresent := model.Documents[id]; !isPresent {
 		if name != "" && desc != "" {
 			model.Documents[id] = model.Document{ID: id, Name: name, Description: desc}
-			fmt.Fprintf(w, "A new document has been added.\n{ID : %d, Name: %s, Description: %s}", id, name, desc)
+
+			result.Message = "New document added"
+			result.Code    = 200
+			result.Result  = []model.Document{model.Documents[id],}
 		} else {
-			fmt.Fprint(w, "One or more arguments missing (name, desc)")
+			result.Message = "One or more arguments missing (name, desc)"
 		}
-		return
+	} else {
+		result.Message = "The document allready exists"
+		result.Result  = []model.Document{model.Documents[id],}
 	}
 
-	// print a message if the document exists
-	fmt.Fprintf(w, "The document %d allready exists\n", id)
+	json.NewEncoder(w).Encode(result)
 }
 
 // Removes document from the list
 func RemoveDocument(w http.ResponseWriter, r *http.Request) {
+	var result Result
+
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	
 	if document, isPresent := model.Documents[id]; isPresent {
+		result.Message = "The document has been deleted"
+		result.Code    = 200
+		result.Result  = []model.Document{document,}
 		delete(model.Documents, document.ID)
-		fmt.Fprintf(w, "The document %d has been deleted \n", document.ID)
-		return
+	} else {
+		result.Message = "No corresponding document"
 	}
 
-	fmt.Fprintf(w, "No existing document corresponding to the ID %d \n", id)
+	json.NewEncoder(w).Encode(result)
 }
 
 // Gets a document
 func GetDocument(w http.ResponseWriter, r *http.Request) {
+	var result Result
+
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	
 	if document, isPresent := model.Documents[id]; isPresent {
-		fmt.Fprintf(w, "Document Founded !\nID : %d \nName : %s \nDescription : %s \n", 
-			document.ID, document.Name, document.Description)
-		return
+		result.Message = "The document has been founded"
+		result.Code    = 200
+		result.Result  = []model.Document{document,}
+	} else {
+		result.Message = "No corresponding document"
 	}
 
-	fmt.Fprintf(w, "No existing document corresponding to the ID %d \n", id)
+	json.NewEncoder(w).Encode(result)
 }
