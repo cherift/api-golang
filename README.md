@@ -18,6 +18,18 @@ No authorization needed. All the datas are saved locally.
 
 ## Use Cases
 
+### - Get the document list
+
+`GET /`
+
+#### Response
+
+|Paraemter | type | Description|
+|----------|------|------------|
+|Message|string|the message|
+|Code|integer|the code of response (0 if faillure and 200 if success)|
+|Result|list|the list of document returned (null if no document founded)|
+
 ### - Create a new document
 
 `POST /create`
@@ -30,9 +42,11 @@ No authorization needed. All the datas are saved locally.
 
 #### Response
 
-`
-    response : string
-`
+|Paraemter | type | Description|
+|----------|------|------------|
+|Message|string|the message|
+|Code|integer|the code of response (0 if faillure and 200 if success)|
+|Result|list|the list of document returned (null if no document founded)|
 
 ### - Remove a document
 
@@ -44,9 +58,11 @@ No authorization needed. All the datas are saved locally.
 
 #### Response
 
-`
-    response : string
-`
+|Paraemter | type | Description|
+|----------|------|------------|
+|Message|string|the message|
+|Code|integer|the code of response (0 if faillure and 200 if success)|
+|Result|list|the list of document returned (null if no document founded)|
 
 ### - Get a document information
 
@@ -58,10 +74,11 @@ No authorization needed. All the datas are saved locally.
 
 #### Response
 
-`
-    response : string
-`
-
+|Paraemter | type | Description|
+|----------|------|------------|
+|Message|string|the message|
+|Code|integer|the code of response (0 if faillure and 200 if success)|
+|Result|list|the list of document returned (null if no document founded)|
 
 ## Maintainers
 
